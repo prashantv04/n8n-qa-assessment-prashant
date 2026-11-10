@@ -24,6 +24,17 @@ I built a "Morning Digest" workflow that notifies the team of the top trending t
 **2. Data Transformation:**
 The initial GitHub search returns a heavily nested JSON payload with 30 items. To transform this for the digest, I utilized a **Split Out** node to separate the `items` array into individual manageable objects, followed immediately by an **Item Lists** node set to `Limit: 3`. This cleanly isolated only the top repositories, preventing unnecessary API calls and preventing API rate limits. I also authenticated both HTTP requests using GitHub API credentials from the n8n credentials store.
 
+*(Below: The main workflow canvas including the Error Handling branch)*
+![Main n8n Workflow](full_n8n_canvas.jpg)
+
+*(Below: Successful Discord Digest Output)*
+![Discord Output](discord_output.jpg)
+
+## Bonus Task: Uptime Monitor
+I also built an automated Uptime Monitor for the OrangeHRM QA environment. It runs every 5 minutes and pings the site. If the site returns a non-200 status code (down or unreachable), the error branch triggers a POST request to the Discord webhook, sending a critical downtime alert to the team.
+
+![Uptime Monitor Canvas](full_n8n_uptime_monitor_canvas.jpg)
+
 **3. Conditional Routing:**
 I implemented an **If** node with a threshold condition targeting the `stargazers_count`. Repositories with greater than 1,000 stars were routed to the True path to be published to the Discord webhook.
 
