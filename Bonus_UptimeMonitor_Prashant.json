@@ -1,0 +1,95 @@
+{
+  "name": "Uptime Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -240,
+        -48
+      ],
+      "id": "8acca5f3-7cbc-41f8-a832-84ab55d630b5",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://opensource-demo.orangehrmlive.com/broken-fake-page",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        64,
+        -48
+      ],
+      "id": "1e17a644-0c29-4fcc-adc2-ef438a958c8e",
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/1569561103128592484/I42ptT9bu2CLuBo4x1DaSQtX3OqWMC9AS3UKyj_SWGZHe0RX8MaKIIlyvk1o4RbGnSMZ",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"content\": \"🚨 **CRITICAL ALERT:** The QA testing environment is currently DOWN or returning an error code!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        352,
+        -32
+      ],
+      "id": "e99658ef-c7aa-4441-88ca-3f717ae5a6a4",
+      "name": " Discord Monitor Uptime"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [],
+        [
+          {
+            "node": " Discord Monitor Uptime",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4c84f55a-939d-4718-9761-efc7511b35fa",
+  "meta": {
+    "instanceId": "eaf958ca3d0cb166cb204534f05a2a58c7ab7107e29ad9992159723de20e71d4"
+  },
+  "nodeGroups": [],
+  "id": "DhzZN5iskWHADjez",
+  "tags": []
+}

@@ -1,0 +1,247 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "0928b24b-c6b9-4558-a6fd-c22e0fdddf4d",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "items",
+        "options": {}
+      },
+      "id": "44be7d5a-a2b3-4467-af2d-d6a6b5c3fb7d",
+      "name": "Split Out Repos",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "6451f809-6fed-48a0-b0cd-b1cb16c8936b",
+              "leftValue": "={{ $('Split Out Repos').item.json.stargazers_count }}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "195be7e9-ab48-4b9f-8bc0-5df2fddbc30b",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        464,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -400
+      ],
+      "id": "282e4a74-45fb-465e-9118-2b9863913916",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/repositories?q=language:javascript&sort=stars&order=desc",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "options": {}
+      },
+      "id": "f94fb329-5c06-4a8d-b9a5-786092411731",
+      "name": "GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -272,
+        -384
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "githubApi": {
+          "id": "BZPM2wh4wngdAWoI",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.languages_url }}",
+        "options": {}
+      },
+      "id": "34fc52de-3920-495d-9f96-a710c70f50e0",
+      "name": "Fetch Repo Languages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        416,
+        -400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/1569561103128592484/I42ptT9bu2CLuBo4x1DaSQtX3OqWMC9AS3UKyj_SWGZHe0RX8MaKIIlyvk1o4RbGnSMZ",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"content\": \"⚠️ **Morning Brief Failed:** The GitHub API is down, rate-limited, or unreachable.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -256,
+        -144
+      ],
+      "id": "7b5bfd92-fbd3-45f1-86d9-14aebcbb5311",
+      "name": "Error Handling"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/1569561103128592484/I42ptT9bu2CLuBo4x1DaSQtX3OqWMC9AS3UKyj_SWGZHe0RX8MaKIIlyvk1o4RbGnSMZ",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"content\": \"🚀 **Morning Digest:** The top repository is **{{ $('Split Out Repos').item.json.name }}** with **{{ $('Split Out Repos').item.json.stargazers_count }}** stars!\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        736,
+        -224
+      ],
+      "id": "f8239831-88bb-46d1-b286-adef312dd809",
+      "name": "Discord Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Repos": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Fetch Repo Languages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Split Out Repos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Repo Languages": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Discord Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "35057b33-514c-449a-a3d0-fc6cda940044",
+  "meta": {
+    "instanceId": "eaf958ca3d0cb166cb204534f05a2a58c7ab7107e29ad9992159723de20e71d4"
+  },
+  "nodeGroups": [],
+  "id": "6VJmllkpPkbvy9fD",
+  "tags": []
+}
