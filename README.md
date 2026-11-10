@@ -30,11 +30,6 @@ The initial GitHub search returns a heavily nested JSON payload with 30 items. T
 *(Below: Successful Discord Digest Output)*
 ![Discord Output](discord_output.jpg)
 
-## Bonus Task: Uptime Monitor
-I also built an automated Uptime Monitor for the OrangeHRM QA environment. It runs every 5 minutes and pings the site. If the site returns a non-200 status code (down or unreachable), the error branch triggers a POST request to the Discord webhook, sending a critical downtime alert to the team.
-
-![Uptime Monitor Canvas](full_n8n_uptime_monitor_canvas.jpg)
-
 **3. Conditional Routing:**
 I implemented an **If** node with a threshold condition targeting the `stargazers_count`. Repositories with greater than 1,000 stars were routed to the True path to be published to the Discord webhook.
 
@@ -46,3 +41,6 @@ I also built an automated Uptime Monitor for the OrangeHRM QA environment.
 *   **Trigger:** A Schedule Trigger runs every 5 minutes.
 *   **Logic:** An HTTP Request node performs a GET request to the OrangeHRM URL. 
 *   **Error Routing:** I configured the node's settings to output errors to the workflow rather than halting. If the site returns a non-200 status code (down or unreachable), the error branch triggers a POST request to the Discord webhook, sending a critical downtime alert to the team.
+
+*(Below: Successful Uptime Monitor Output)*
+![Uptime Monitor Canvas](full_n8n_uptime_monitor_canvas.jpg)
