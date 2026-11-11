@@ -1,7 +1,7 @@
 # Automation & QA Developer Assessment
 
 **Candidate:** Prashant  
-**Loom Video Walkthrough:** https://drive.google.com/file/d/1_Mvv3auNW6lL63VzZLRCZQsBYcA9LczZ/view?usp=drive_link
+**Video Walkthrough:** https://drive.google.com/file/d/1_Mvv3auNW6lL63VzZLRCZQsBYcA9LczZ/view?usp=drive_link
 
 ## Files Included in this Repository
 * `Task1_QA_Report_Candidate.pdf`: The bug report and root cause analysis.
