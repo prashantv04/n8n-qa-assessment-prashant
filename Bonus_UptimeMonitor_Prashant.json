@@ -38,7 +38,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://discord.com/api/webhooks/1569561103128592484/I42ptT9bu2CLuBo4x1DaSQtX3OqWMC9AS3UKyj_SWGZHe0RX8MaKIIlyvk1o4RbGnSMZ",
+        "url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_TOKEN",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "{\n  \"content\": \"🚨 **CRITICAL ALERT:** The QA testing environment is currently DOWN or returning an error code!\"\n}",
